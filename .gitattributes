@@ -1,0 +1,7 @@
+# Use LF for tracked text files, including evaluation dataset checkouts.
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf

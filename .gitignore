@@ -1,0 +1,40 @@
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Generated reports can contain entered messages and context
+/results/
+/analysis_*.json
+/evaluation_*.json
+
+# Local settings and explicitly private data
+.env
+.env.*
+!.env.example
+/private_data/
+
+# Downloaded model files and Gradio caches
+/models/
+*.gguf
+/gradio_cached_examples/
+/.gradio/
+
+# Machine-specific files and the downloaded documentation archive
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
+/message-check-baseline.zip
+
+# Keep the synthetic JSON files in data/ tracked.
