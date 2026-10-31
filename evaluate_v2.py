@@ -1,12 +1,14 @@
-"""Evaluate the suspicious-message project using the second prompt version.
+"""Evaluate the suspicious-message project using candidate prompt version v4.
 
 Requires Python 3.9+; uses only the standard library (no pip installation).
 Place this file in AI_Project beside evaluate.py and the data folder, then run:
     py evaluate_v2.py
 
-The v2 prompt, model settings, schema, test data, and assessment scoring are
-unchanged. Output checks now also flag evidence when no concerns are listed.
-analyze.py reuses this module for interactive analysis without reference answers.
+The v4 candidate adds two worked examples contrasting a claimed existing
+restriction with a threatened future restriction. Its model behavior needs
+evaluation; the added examples do not establish an improvement by themselves.
+The filename is retained because analyze.py and app.py import this module.
+The model settings, schema, output checks, test data, and scoring are unchanged.
 Expected answers NEVER enter the model request. Results use a new filename for
 every run. The 20 cases are development references, not an independent measure
 of real-world safety. Review explanations and debatable labels as well as scores.
@@ -26,7 +28,7 @@ from pathlib import Path
 PROJECT_DIR = Path(__file__).resolve().parent
 OLLAMA_URL = "http://127.0.0.1:11434/api/chat"
 DEFAULT_MODEL = "qwen3:4b-instruct-2507-q4_K_M"
-PROMPT_VERSION = "automated-prompt-v2"
+PROMPT_VERSION = "automated-prompt-v4"
 VALIDATION_VERSION = "output-checks-v2"
 ASSESSMENTS = ("concerning", "no_clear_concern", "insufficient_context")
 OPTIONS = {"temperature": 0, "num_ctx": 4096, "num_predict": 512}
@@ -79,6 +81,11 @@ CALIBRATION
 - Violent wording can warrant concern even if joking is possible. An emoji
   neither establishes safety nor proves serious intent. Describe that uncertainty;
   never claim to know that a message is or is not a joke without supporting context.
+- Preserve who acts, the stated conditions, and whether an event is described as
+  already having happened or as a threatened future action. A claim that a
+  restriction already exists is not, by itself, a threat to impose it. Describe
+  any pressure without changing that claim or inventing who caused the
+  restriction. When a threat is supported, name its specific consequence.
 - A concerning assessment does not justify adding every possible concern label.
   Label only behavior actually supported by the input. Do not infer a pattern of
   abuse, escalating control, blackmail, or threats from unrelated wording.
@@ -94,7 +101,8 @@ Return only valid JSON with exactly these four fields:
   quote under this output format. Use [] when there are no concerns.
 "explanation": one to three concise sentences connecting the observations to the
   assessment. Identify material uncertainty. Attribute contextual facts to the
-  supplied context; do not present them as independently verified.
+  supplied context; do not present them as independently verified. Use plain
+  language; do not mention JSON fields or null values.
 
 Each concern needs support. Do not invent links, deadlines, identities, threats,
 or sensitive information not present in the input. Do not claim to have checked
@@ -116,6 +124,16 @@ Input:
 {"message":"Forward the login code you just received so I can unlock your profile.","context":"An unexpected message from someone claiming to provide technical support."}
 Output:
 {"assessment":"concerning","concerns":["request_for_verification_code"],"evidence":["Forward the login code you just received"],"explanation":"The sender asks the recipient to disclose a login code. Together with the unsolicited contact described in the context, this is a concrete warning sign; the sender's identity is unverified."}
+
+Input:
+{"message":"Your shipment is on hold. Send a gift-card code to release it.","context":null}
+Output:
+{"assessment":"concerning","concerns":["request_for_gift_card_code"],"evidence":["Send a gift-card code to release it."],"explanation":"The sender claims the shipment is already on hold and asks for a gift-card code to release it. Asking for the code is a concrete warning sign; the claim does not establish who placed the hold."}
+
+Input:
+{"message":"Send a gift-card code or I will put your shipment on hold.","context":null}
+Output:
+{"assessment":"concerning","concerns":["request_for_gift_card_code","threat_to_hold_shipment"],"evidence":["Send a gift-card code","I will put your shipment on hold."],"explanation":"The sender asks for a gift-card code and threatens to hold the shipment if the recipient refuses. This demand uses a threatened consequence to apply pressure; the sender's ability to carry it out is unverified."}
 
 Now analyze the current user-provided message and context.
 Do not include Markdown, code fences, or any text outside the JSON object.""".strip()

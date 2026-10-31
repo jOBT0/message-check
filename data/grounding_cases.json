@@ -1,0 +1,114 @@
+[
+  {
+    "id": "grounding_001",
+    "message": "Your account is blocked. Reply with your password to restore access.",
+    "context": null,
+    "expected": {
+      "assessment": "concerning",
+      "reasoning_checks": [
+        "Identify the request to disclose a password as a concrete warning sign.",
+        "Treat the block as the sender's claim about an existing condition; do not describe a threat to block the account in the future.",
+        "Do not assert that the sender caused the block or has verified control of the account.",
+        "Use plain language without references to null values or certainty about the sender's intentions."
+      ]
+    }
+  },
+  {
+    "id": "grounding_002",
+    "message": "Reply with your password or I will block your account.",
+    "context": null,
+    "expected": {
+      "assessment": "concerning",
+      "reasoning_checks": [
+        "Identify both the request to disclose a password and the conditional threat to block the account.",
+        "Describe the specific threatened consequence and preserve its condition: refusal to provide the password.",
+        "Do not claim the account is already blocked or that the sender's ability to block it has been verified.",
+        "Use plain language without references to null values or certainty about the sender's intentions."
+      ]
+    }
+  },
+  {
+    "id": "grounding_003",
+    "message": "Your profile has been disabled. Send me your password so I can reactivate it.",
+    "context": null,
+    "expected": {
+      "assessment": "concerning",
+      "reasoning_checks": [
+        "Identify the password disclosure request as a warning sign.",
+        "Describe the disabled profile as an existing condition claimed by the sender, rather than a threat of future disabling.",
+        "Do not infer that the sender disabled the profile or can actually reactivate it.",
+        "Keep evidence specific to this message; do not import shipment or gift-card details from the demonstrations."
+      ]
+    }
+  },
+  {
+    "id": "grounding_004",
+    "message": "Send me your password, otherwise I will disable your profile.",
+    "context": null,
+    "expected": {
+      "assessment": "concerning",
+      "reasoning_checks": [
+        "Identify both the password disclosure request and the conditional threat to disable the profile.",
+        "Preserve the sender as the person making the threat and refusal to provide the password as the condition.",
+        "Do not claim the profile is already disabled or that the sender's power over it is verified.",
+        "Keep evidence specific to this message; do not import shipment or gift-card details from the demonstrations."
+      ]
+    }
+  },
+  {
+    "id": "grounding_005",
+    "message": "Your account has been temporarily locked after several failed sign-in attempts. Open the app directly to review recovery options.",
+    "context": "This notice appeared inside the app I normally use immediately after my unsuccessful sign-in attempts.",
+    "expected": {
+      "assessment": "no_clear_concern",
+      "reasoning_checks": [
+        "Recognize that the supplied context supports an ordinary account notice, while attributing that information to the context.",
+        "Do not invent a request to disclose a password or login code, an embedded link, or a threat by the sender.",
+        "Return empty concerns and evidence arrays under the current output contract.",
+        "Do not claim that the sender, app, or account has been independently verified as safe."
+      ]
+    }
+  },
+  {
+    "id": "grounding_006",
+    "message": "Please stop messaging me. If you continue, I will block your number.",
+    "context": "The sender has already asked me to stop contacting them several times.",
+    "expected": {
+      "assessment": "no_clear_concern",
+      "reasoning_checks": [
+        "Recognize an ordinary communication boundary supported by the supplied context.",
+        "Do not treat the presence of a conditional blocking statement as sufficient evidence of harmful coercion.",
+        "Return empty concerns and evidence arrays under the current output contract.",
+        "Do not infer other abuse, threats, or motives that the input does not describe."
+      ]
+    }
+  },
+  {
+    "id": "grounding_007",
+    "message": "Can you send me the money today?",
+    "context": null,
+    "expected": {
+      "assessment": "insufficient_context",
+      "reasoning_checks": [
+        "Explain that the payment purpose or prior agreement would materially affect the assessment.",
+        "Do not treat a money request or the word today as proof of fraud, coercion, or a threat.",
+        "Do not turn missing context into a claim that the sender concealed information.",
+        "If concerns is empty, evidence must also be empty; any listed tentative concern needs specific support."
+      ]
+    }
+  },
+  {
+    "id": "grounding_008",
+    "message": "Can you send me the money today?",
+    "context": "A friend reminding me about a repayment we agreed I would make today.",
+    "expected": {
+      "assessment": "no_clear_concern",
+      "reasoning_checks": [
+        "Use the supplied agreement and relationship to explain an ordinary repayment reminder.",
+        "Attribute those details to the supplied context rather than independently verifying them.",
+        "Return empty concerns and evidence arrays under the current output contract.",
+        "Do not equate no clear concern with a guarantee that the sender or message is safe."
+      ]
+    }
+  }
+]
